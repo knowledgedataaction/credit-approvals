@@ -12,5 +12,15 @@ resolvers in ThisBuild ++= Seq( "Sonatype releases" at "https://oss.sonatype.org
                                 "Spray IO Repository" at "http://repo.spray.io/",
                                 "Maven Central" at "https://repo1.maven.org/maven2/" )
 
-lazy val root = ( project in file( "." ) )
-lazy val creditApprovalService = ( project in file( "Credit-approvals-service" ) ).settings( libraryDependencies ++= slf4j ++ logback )
+//@formatter:off
+lazy val root = ( project in file( "." ) ).aggregate( creditApprovalService )
+
+lazy val creditApprovalService = ( project in file( "credit-approvals-service" ) )
+                                    .settings( libraryDependencies ++=
+                                               slf4j ++
+                                               logback ++
+                                               drools ++
+                                               kie ++
+                                               junit ++
+                                               junitInterface )
+//@formatter:on

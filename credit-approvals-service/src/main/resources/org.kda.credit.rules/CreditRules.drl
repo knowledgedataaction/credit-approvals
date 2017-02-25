@@ -1,0 +1,53 @@
+package org.kda.credit.rules;
+
+import scala.Option;
+import scala.Some;
+
+import scala.math.BigDecimal;
+
+import org.kda.credit.model.Customer;
+import org.kda.credit.model.Application;
+import org.kda.credit.model.ApprovedApplication;
+import org.kda.credit.model.UnapprovedApplication;
+import org.kda.credit.model.CreditLine;
+
+rule "Customers with a credit score between 300 and 500 get a standard line of credit"
+    when
+        not( exists ( ApprovedApplication() ) )
+        not( exists ( UnapprovedApplication() ) )
+
+        $customer : Customer( creditScore <= 500, creditScore >= 300 )
+        $pendingApplication : Application( customerId == $customer.id )
+    then
+        CreditLine creditLine = new CreditLine( $customer, BigDecimal.decimal( 10000.0 ) );
+
+        insert( $pendingApplication.approved( creditLine ) );
+        delete( $pendingApplication );
+end
+
+rule "Customers with a credit score above 500 get an extended line of credit"
+    when
+        not( exists ( ApprovedApplication() ) )
+        not( exists ( UnapprovedApplication() ) )
+
+        $customer : Customer( creditScore > 500 )
+        $pendingApplication : Application( customerId == $customer.id )
+    then
+        CreditLine creditLine = new CreditLine( $customer, BigDecimal.decimal( 15000.0 ) );
+
+        insert( $pendingApplication.approved( creditLine ) );
+        delete( $pendingApplication );
+end
+
+rule "Customers with a credit score less than 300 get denied a line of credit"
+    when
+        not( exists ( ApprovedApplication() ) )
+        not( exists ( UnapprovedApplication() ) )
+
+        $customer : Customer( creditScore < 300 )
+        $pendingApplication : Application( customerId == $customer.id )
+
+    then
+        insert( $pendingApplication.unapproved() );
+        delete( $pendingApplication );
+end
