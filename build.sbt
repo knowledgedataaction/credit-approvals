@@ -22,5 +22,8 @@ lazy val creditApprovalService = ( project in file( "credit-approvals-service" )
                                                drools ++
                                                kie ++
                                                junit ++
-                                               junitInterface )
+                                               junitInterface ++
+                                               akka ++
+                                               spray ++
+                                               sprayJson )
 //@formatter:on

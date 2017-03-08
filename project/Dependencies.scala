@@ -18,10 +18,11 @@ object Dependencies {
 
   val slf4j = Seq( "org.slf4j" % "slf4j-api" % slf4jVersion )
 
+  val akka = Seq( "com.typesafe.akka" %% "akka-actor" % akkaVersion )
+
   val spray = Seq( "io.spray" %% "spray-can" % sprayVersion,
                    "io.spray" %% "spray-util" % sprayVersion,
-                   "io.spray" %% "spray-routing" % sprayVersion,
-                   "io.spray" %% "spray-testkit" % sprayVersion % "test" )
+                   "io.spray" %% "spray-routing" % sprayVersion )
 
   val sprayJson = Seq( "io.spray" %% "spray-json" % sprayJsonVersion )
 
